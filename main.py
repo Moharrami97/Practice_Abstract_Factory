@@ -10,6 +10,10 @@ class ProductBase(ABC):
     def price(self):
         pass
 
+    @abstractmethod
+    def shipping(self):
+        pass
+
 
 class ProductShow(ABC):
     @abstractmethod
@@ -21,12 +25,16 @@ class Rugs(ProductBase):
     def __init__(self, name, price):
         self.name = name
         self._price = price
+        self.transportation = "Truck"
 
     def detail(self):
         return DetailRugs(self)
 
     def price(self):
         return PriceRugs(self)
+
+    def shipping(self):
+        return ShippingRugs(self)
 
 
 class DetailRugs(ProductShow):
@@ -45,17 +53,29 @@ class PriceRugs(ProductShow):
         return f"price of the rug: {self.rugs._price}"
 
 
+class ShippingRugs(ProductShow):
+    def __init__(self, rugs):
+        self.rugs = rugs
+
+    def show(self):
+        return f"transportation by {self.rugs.transportation}"
+
+
 class Mobile(ProductBase):
     def __init__(self, name, model, price):
         self.name = name
         self.model = model
         self._price = price
+        self.transportation = "engine"
 
     def detail(self):
         return DetailMobile(self)
 
     def price(self):
         return PriceMobile(self)
+
+    def shipping(self):
+        return ShippingMobile(self)
 
 
 class DetailMobile(ProductShow):
@@ -74,11 +94,20 @@ class PriceMobile(ProductShow):
         return f"price of the mobile: {self.mobile._price} "
 
 
+class ShippingMobile(ProductShow):
+    def __init__(self, mobile):
+        self.mobile = mobile
+
+    def show(self):
+        return f"transportation by {self.mobile.transportation}"
+
+
 class GiftCart(ProductBase):
     def __init__(self, company, min_price, max_price):
         self.company = company
         self.min_price = min_price
         self.max_price = max_price
+        self.transportation = "online"
 
     def detail(self):
         return DetailGiftCart(self)
@@ -86,13 +115,16 @@ class GiftCart(ProductBase):
     def price(self):
         return PriceGiftCart(self)
 
+    def shipping(self):
+        return ShippingGiftCart(self)
+
 
 class DetailGiftCart(ProductShow):
     def __init__(self, cart):
         self.cart = cart
 
     def show(self):
-        return f"company of the giftcart: {self.cart.company}"
+        return f"company of the GiftCart: {self.cart.company}"
 
 
 class PriceGiftCart(ProductShow):
@@ -102,6 +134,14 @@ class PriceGiftCart(ProductShow):
     def show(self):
         return f"minimum price of the GiftCart: {self.cart.min_price}" \
                f"maximum price of the GiftCart: {self.cart.max_price}"
+
+
+class ShippingGiftCart(ProductShow):
+    def __init__(self, cart):
+        self.cart = cart
+
+    def show(self):
+        return f"transportation by {self.cart.transportation}"
 
 
 if __name__ == "__main__":
@@ -118,3 +158,4 @@ if __name__ == "__main__":
 
     for product in products:
         print(f"{product.detail().show()} ----> {product.price().show()}")
+        print(product.shipping().show())
